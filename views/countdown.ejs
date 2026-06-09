@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= event.title %></title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body style="margin:0; padding:0;">
+
+    <div class="<%= event.theme.type === 'preset' ? event.theme.value : '' %>"
+         style="<%= event.theme.type === 'custom' ? `
+            background: ${event.theme.bgImage ? `url('${event.theme.bgImage}') no-repeat center center / cover` : event.theme.bg}; 
+            color: ${event.theme.text}; 
+            min-height: 100vh; 
+            padding: 40px; 
+            text-align: center;
+         ` : '' %>">
+        
+        <div style="<%= event.theme.type === 'custom' && event.theme.bgImage ? 'background: rgba(0,0,0,0.6); display: inline-block; padding: 30px; border-radius: 12px; margin-top: 5vh;' : '' %>">
+            
+            <h1><%= event.title %></h1>
+            <% if (event.details) { %> 
+                <p style="opacity: 0.8; max-width:600px; margin: 10px auto;"><%= event.details %></p> 
+            <% } %>
+
+            <div id="countdown-engine" 
+                 data-start="<%= event.startAt.toISOString() %>" 
+                 data-end="<%= event.endAt.toISOString() %>">
+                
+                <% if (state === 'expired') { %>
+                    <div class="expired-box" style="background: rgba(244, 63, 94, 0.2); border: 2px solid #f43f5e; padding: 20px; display: inline-block; margin-top: 25px; border-radius: 6px;">
+                        🛑 This countdown event has reached completion and is concluded.
+                    </div>
+
+                <% } else if (state === 'scheduled') { %>
+                    <div id="scheduled-status" style="background: rgba(99, 102, 241, 0.2); border: 1px dashed #6366f1; padding: 20px; display: inline-block; margin-top: 25px; border-radius: 6px;">
+                        <h3>Status: Scheduled (Not Yet Started)</h3>
+                        <p><strong>Starts At:</strong> <%= event.startAt.toLocaleString() %></p>
+                        <p><strong>Closes At:</strong> <%= event.endAt.toLocaleString() %></p>
+                        <div style="font-size: 0.9rem; margin-top: 10px; color: #a1a1aa;">The live clock will activate automatically upon start time...</div>
+                    </div>
+
+                <% } else { %>
+                    <div id="timer" style="font-size: 3rem; font-weight: bold; margin: 30px 0; letter-spacing: 2px;">
+                        <span id="days">00</span>d : <span id="hours">00</span>h : <span id="mins">00</span>m : <span id="secs">00</span>s
+                    </div>
+
+                    <% if (event.userId.tier === 'premium' && event.allowBooking) { %>
+                        <div id="booking-container" style="max-width: 400px; margin: 40px auto; background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; color: #fff; text-align: left;">
+                            <h3 style="margin-top:0; text-align:center;">Book Your Spot Instantly</h3>
+                            <form hx-post="/events/<%= event.slug %>/book" hx-target="#booking-container">
+                                <input type="text" name="name" placeholder="Your Name" style="margin-bottom:10px;" required>
+                                <input type="email" name="email" placeholder="Your Email Address" style="margin-bottom:10px;" required>
+                                <button type="submit" class="cta-btn" style="width:100%;">Confirm Attendance Registration</button>
+                            </form>
+                        </div>
+                    <% } %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const engine = document.getElementById('countdown-engine');
+            if (!engine) return;
+
+            const startTime = new Date(engine.dataset.start).getTime();
+            const endTime = new Date(engine.dataset.end).getTime();
+
+            const runEngine = () => {
+                const now = new Date().getTime();
+
+                if (now < startTime) return;
+
+                const scheduledBox = document.getElementById('scheduled-status');
+                if (scheduledBox) {
+                    engine.innerHTML = `
+                        <div id="timer" style="font-size: 3rem; font-weight: bold; margin: 30px 0; letter-spacing: 2px;">
+                            <span id="days">00</span>d : <span id="hours">00</span>h : <span id="mins">00</span>m : <span id="secs">00</span>s
+                        </div>
+                        <% if (event.userId.tier === 'premium' && event.allowBooking) { %>
+                            <div id="booking-container" style="max-width: 400px; margin: 40px auto; background: rgba(0,0,0,0.7); border:1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; color:#fff; text-align:left;">
+                                <h3 style="margin-top:0; text-align:center;">Book Your Spot Instantly</h3>
+                                <form hx-post="/events/<%= event.slug %>/book" hx-target="#booking-container">
+                                    <input type="text" name="name" placeholder="Your Name" style="margin-bottom:10px;" required>
+                                    <input type="email" name="email" placeholder="Your Email Address" style="margin-bottom:10px;" required>
+                                    <button type="submit" class="cta-btn" style="width:100%;">Confirm Attendance Registration</button>
+                                </form>
+                            </div>
+                        <% } %>
+                    `;
+                    if (typeof htmx !== 'undefined') { htmx.process(engine); }
+                }
+
+                const difference = endTime - now;
+                if (difference <= 0) {
+                    clearInterval(tickerLoop);
+                    engine.innerHTML = `
+                        <div class="expired-box" style="background: rgba(244, 63, 94, 0.2); border: 2px solid #f43f5e; padding: 20px; display: inline-block; margin-top: 25px; border-radius: 6px;">
+                            🛑 This countdown event has reached completion and is concluded.
+                        </div>
+                    `;
+                    return;
+                }
+
+                const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+                const dEl = document.getElementById('days');
+                const hEl = document.getElementById('hours');
+                const mEl = document.getElementById('mins');
+                const sEl = document.getElementById('secs');
+
+                if (dEl) dEl.innerText = String(d).padStart(2, '0');
+                if (hEl) hEl.innerText = String(h).padStart(2, '0');
+                if (mEl) mEl.innerText = String(m).padStart(2, '0');
+                if (sEl) sEl.innerText = String(s).padStart(2, '0');
+            };
+
+            runEngine();
+            const tickerLoop = setInterval(runEngine, 1000);
+        })();
+    </script>
+</body>
+</html>

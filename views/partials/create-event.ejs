@@ -1,0 +1,61 @@
+<h2>Set Up Your Countdown Timer</h2>
+<form hx-post="/events/create" hx-target="#result-target">
+    <div>
+        <label>Event Title</label>
+        <input type="text" name="title" placeholder="e.g. Product Launch Alpha" required>
+    </div>
+    <div>
+        <label>Details / Description</label>
+        <textarea name="details" placeholder="What is happening when the clock hits zero?"></textarea>
+    </div>
+    <div style="display: flex; gap: 10px;">
+        <div style="flex: 1;">
+            <label>Start Window</label>
+            <input type="datetime-local" name="startAt" required>
+        </div>
+        <div style="flex: 1;">
+            <label>End/Target Window</label>
+            <input type="datetime-local" name="endAt" required>
+        </div>
+    </div>
+
+    <div>
+        <label>Select Preset Aesthetic Style</label>
+        <select name="themePreset">
+            <option value="theme-dark">Midnight Dark</option>
+            <option value="theme-light">Snow Alabaster</option>
+            <option value="theme-neon">Matrix Cyber Neon</option>
+        </select>
+    </div>
+
+    <% if (user.tier === 'premium') { %>
+        <div style="border: 1px dashed var(--accent); padding: 15px; border-radius: 6px; display: flex; flex-direction: column; gap: 15px;">
+            <h4 style="margin: 0; color: var(--accent);">✨ Premium Configurations</h4>
+            
+            <div>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" name="allowBooking" value="true" style="width: auto;">
+                    <strong>Enable "Book your spot" registration form on event page</strong>
+                </label>
+            </div>
+
+            <div>
+                <label>Custom Background Image URL (Optional)</label>
+                <input type="url" name="customBgImage" placeholder="https://example.com/background.jpg">
+            </div>
+
+            <div style="display: flex; gap: 20px;">
+                <label>Canvas Fallback BG Color: <input type="color" name="customBg" value="#121214" style="height:40px; width:60px; padding:0;"></label>
+                <label>Typography Color: <input type="color" name="customText" value="#ffffff" style="height:40px; width:60px; padding:0;"></label>
+            </div>
+        </div>
+    <% } else { %>
+        <div style="background: #27272a; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
+            💡 <strong>Want features like custom background images and visitor booking forms?</strong> Sign up for a Premium Account status.
+        </div>
+    <% } %>
+
+    <button type="submit">Build Workspace Link</button>
+</form>
+
+<div id="result-target"></div>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Register - Countdown Mirror</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  </head>
+  <body>
+    <div class="container" style="max-width: 400px; margin-top: 100px">
+      <h2>Get Started</h2>
+      <form hx-post="/auth/register" hx-target="#error-out">
+        <input type="email" name="email" placeholder="Email Address" required />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <label>Choose Membership Tier:</label>
+        <select name="tier">
+          <option value="basic">Basic (Free Link Generation)</option>
+          <option value="premium">Premium (Custom UI Styles + Iframes)</option>
+        </select>
+        <button type="submit">Complete Sign Up</button>
+      </form>
+      <div id="error-out" style="margin-top: 10px"></div>
+      <p style="text-align: center; font-size: 0.9rem">
+        <a href="/login" style="color: var(--accent)"
+          >Already profile active? Log In</a
+        >
+      </p>
+    </div>
+  </body>
+</html>

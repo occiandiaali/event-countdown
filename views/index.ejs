@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Countdown Mirror</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body>
+    <nav><%- include('partials/navbar', { user: user }) %></nav>
+
+    <div class="container">
+        <% if (!user) { %>
+            <div style="text-align: center; margin-top: 60px;">
+                <h1 style="font-size: 3.5rem; margin-bottom: 10px;">Timers Built For Global Distribution.</h1>
+                <p style="color: #a1a1aa; font-size: 1.2rem; margin-bottom: 30px;">Generate gorgeous responsive timers with standard links or embedding iframes seamlessly.</p>
+                <a href="/register" class="cta-btn" style="text-decoration: none; padding: 15px 30px;">Start Creating Events</a>
+            </div>
+        <% } else { %>
+            <%- include('partials/create-event', { user: user }) %>
+        <% } %>
+    </div>
+    <div>
+        <%- include('partials/footer') %>
+    </div>
+</body>
+</html>

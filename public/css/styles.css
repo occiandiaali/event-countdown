@@ -1,0 +1,275 @@
+:root {
+  --bg-primary: #121214;
+  --bg-surface: #1a1a1e;
+  --text-main: #eaeaea;
+  --text-muted: #a1a1aa;
+  --accent: #6366f1;
+  --danger: #f43f5e;
+  --success: #14532d;
+}
+
+/* Global Reset & Box-Sizing Fix */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  line-height: 1.5;
+  padding-bottom: 40px;
+}
+
+/* Responsive Navigation Bar */
+nav {
+  display: flex;
+  flex-wrap: wrap; /* Allows links to stack cleanly on small mobile browsers */
+  gap: 15px;
+  background-color: var(--bg-surface);
+  padding: 15px 5%;
+  align-items: center;
+  border-bottom: 1px solid #27272a;
+}
+
+nav .nav-brand {
+  font-weight: bold;
+  margin-right: auto;
+  font-size: 1.1rem;
+}
+
+nav a,
+nav button {
+  color: var(--text-main);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+nav a:hover {
+  color: var(--accent);
+}
+
+nav button {
+  color: var(--danger);
+}
+
+/* Flexible Core Fluid Container */
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Footer */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 8px;
+}
+
+/* Fluid Landing Presentation Styles */
+.hero-section {
+  text-align: center;
+  margin-top: 10vh;
+  padding: 0 10px;
+}
+
+.hero-section h1 {
+  /* Dynamically scales text safely between 2rem and 3.5rem based on screen size */
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.2;
+  margin-bottom: 15px;
+}
+
+.hero-section p {
+  color: var(--text-muted);
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  margin-bottom: 30px;
+}
+
+/* Robust Grid & Form Element Controls */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--bg-surface);
+  padding: clamp(
+    15px,
+    4vw,
+    30px
+  ); /* Padding shrinks gracefully on small displays */
+  border-radius: 8px;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  flex-wrap: wrap; /* Splits dual-columns into clean vertical stacks on mobile sizes */
+}
+
+.form-row > div {
+  flex: 1;
+  min-width: 240px; /* Forces stack wrapper layout action below 500px wide screens */
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+input,
+textarea,
+select {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #3f3f46;
+  background: #27272a;
+  color: #fff;
+  width: 100%;
+  font-size: 1rem;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--accent);
+  border-color: transparent;
+}
+
+/* UI Action Button Mechanics */
+button[type="submit"],
+.cta-btn {
+  background: var(--accent);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.1s ease;
+  text-align: center;
+  display: inline-block;
+}
+
+button[type="submit"]:active,
+.cta-btn:active {
+  transform: scale(0.98);
+}
+
+/* Dashboard List Structures */
+.event-card {
+  background: var(--bg-surface);
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap; /* Drops buttons underneath title strings cleanly if space is tight */
+  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #27272a;
+}
+
+/* Micro Output & Display Alert Frameworks */
+.success-box {
+  background: var(--success);
+  padding: 20px;
+  border-radius: 6px;
+  margin-top: 20px;
+  word-break: break-all; /* Prevents long URLs from pushing past container bounds */
+}
+
+/* Countdown Display Engine Rules */
+#timer {
+  font-size: clamp(
+    1.6rem,
+    6vw,
+    3rem
+  ); /* Prevents overlapping time text elements */
+  font-weight: bold;
+  margin: 25px auto;
+  letter-spacing: 1px;
+  word-spacing: 2px;
+  display: inline-block;
+}
+
+/* Dynamic Aesthetic Preset Visual Rules */
+.theme-dark {
+  background-color: #09090b;
+  color: #fafafa;
+  min-height: 100vh;
+  padding: 40px 20px;
+  text-align: center;
+}
+.theme-light {
+  background-color: #f4f4f5;
+  color: #18181b;
+  min-height: 100vh;
+  padding: 40px 20px;
+  text-align: center;
+}
+.theme-neon {
+  background-color: #0c0a09;
+  color: #39ff14;
+  min-height: 100vh;
+  padding: 40px 20px;
+  text-align: center;
+  font-family: "Courier New", monospace;
+}
+
+.theme-dark input,
+.theme-dark textarea {
+  background: #1c1c1f;
+  color: #fff;
+}
+.theme-light input,
+.theme-light textarea {
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+/* Micro Media Override Modifications */
+@media (max-width: 480px) {
+  nav {
+    justify-content: center;
+    text-align: center;
+  }
+  nav .nav-brand {
+    flex: 0 0 100%;
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+  .event-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .event-card a {
+    width: 100%;
+  }
+}
