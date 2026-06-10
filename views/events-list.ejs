@@ -22,8 +22,9 @@
             </div>
         <% } else { %>
             <div style="display: flex; flex-direction: column; gap: 15px;">
-                <% events.forEach(event => { %>
-                    <div style="background: var(--bg-surface); padding: 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                <% events.forEach((event, idx) => { %>
+                    <div style="background: var(--bg-surface); padding: 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;position: relative;">
+                        <span class="list-item-x" id="item-<%= event.title %>">X</span>
                         <div>
                             <h3 style="margin: 0 0 5px 0;"><%= event.title %></h3>
                             <p style="margin: 0; font-size: 0.85rem; color: #a1a1aa;">
@@ -37,5 +38,27 @@
             </div>
         <% } %>
     </div>
+    <script>
+        // const itemX = document.getElementById('list-item-x');
+        // itemX.addEventListener('click', () => {
+        //     events.forEach(el => {
+        //         alert(`Clicked..${el}`)
+                
+        //     });
+        // })
+        document.querySelectorAll('.list-item-x').forEach((span, title) => {
+            span.addEventListener('click', function() {
+               // const itemId = idx;// Capture the current index
+                if (confirm(`Are you sure you want to delete: ${title}?`)) {
+                    alert(`Deleting Item: ${title}`)
+                }
+            })
+        })
+        // function delItem(v) {
+        //     if (confirm(`Are you sure you want to delete: ${JSON.stringify(v)}?`)) {
+        //         alert(`${JSON.stringify(v)} deleted!`)
+        //     }
+        // }
+    </script>
 </body>
 </html>

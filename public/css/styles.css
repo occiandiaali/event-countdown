@@ -35,9 +35,15 @@ nav {
   flex-wrap: wrap; /* Allows links to stack cleanly on small mobile browsers */
   gap: 15px;
   background-color: var(--bg-surface);
+  opacity: 0.7;
   padding: 15px 5%;
   align-items: center;
   border-bottom: 1px solid #27272a;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 200;
 }
 
 nav .nav-brand {
@@ -69,7 +75,8 @@ nav button {
 .container {
   width: 100%;
   max-width: 800px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  margin: 5% auto;
   padding: 20px;
 }
 
@@ -218,6 +225,18 @@ button[type="submit"]:active,
   display: inline-block;
 }
 
+/* List item X */
+.list-item-x {
+  font-size: large;
+  color: red;
+  font-weight: 700;
+  padding: 6px;
+  cursor: pointer;
+  position: absolute;
+  top: -5%;
+  left: 0;
+}
+
 /* Dynamic Aesthetic Preset Visual Rules */
 .theme-dark {
   background-color: #09090b;
@@ -252,6 +271,19 @@ button[type="submit"]:active,
   background: #fff;
   color: #000;
   border: 1px solid #ccc;
+}
+
+@media (max-width: 680px) {
+  .container {
+    margin: 30% auto;
+  }
+  #dates-windows-div {
+    display: flex;
+    flex-direction: column;
+  }
+  .setup-h2 {
+    font-size: 1.2rem;
+  }
 }
 
 /* Micro Media Override Modifications */
