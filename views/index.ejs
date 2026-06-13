@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Event Countdown Mirror</title>
+    <title>CountdownToEvent</title>
     <link rel="stylesheet" href="/css/styles.css">
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
@@ -12,16 +12,35 @@
     <div class="container">
         <% if (!user) { %>
             <div style="text-align: center; margin-top: 60px;">
-                <h1 style="font-size: 3.5rem; margin-bottom: 10px;">Timers Built For Global Distribution.</h1>
-                <p style="color: #a1a1aa; font-size: 1.2rem; margin-bottom: 30px;">Generate gorgeous responsive timers with standard links or embedding iframes seamlessly.</p>
+                <h1 style="font-size: 3.5rem; margin-bottom: 10px;" class="main-h1">Timers Built For Global Distribution.</h1>
+                <p style="color: #a1a1aa; font-size: 1.2rem; margin-bottom: 30px;">Generate custom countdown timers with standard links or embeddable iframes seamlessly.</p>
                 <a href="/register" class="cta-btn" style="text-decoration: none; padding: 15px 30px;">Start Creating Events</a>
             </div>
         <% } else { %>
             <%- include('partials/create-event', { user: user }) %>
         <% } %>
     </div>
+
     <div>
         <%- include('partials/footer') %>
     </div>
+        <div id="offline-notification">
+    <span class="retry-indicator"></span> 
+    📡 Connection Lost. Please check your internet connection and try again.
+</div>
+
+<script>
+    document.body.addEventListener('htmx:sendError', function(event) {
+        const offlineToast = document.getElementById('offline-notification');
+        if (offlineToast) {
+            offlineToast.classList.add('show');
+            
+            // Automatically clear the banner after 5 seconds
+            setTimeout(() => {
+                offlineToast.classList.remove('show');
+            }, 5000);
+        }
+    });
+</script>
 </body>
 </html>

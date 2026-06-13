@@ -80,6 +80,18 @@ nav button {
   padding: 20px;
 }
 
+.main-h1 {
+  font-size: 72px; /* Set the font size */
+  background-image: linear-gradient(
+    to right,
+    #ff7e5f,
+    #feb47b
+  ); /* Define the gradient */
+  background-clip: text;
+  -webkit-background-clip: text; /* Clip the background to the text */
+  -webkit-text-fill-color: transparent; /* Make the text color transparent */
+}
+
 /* Footer */
 footer {
   position: fixed;
@@ -303,5 +315,99 @@ button[type="submit"]:active,
   }
   .event-card a {
     width: 100%;
+  }
+}
+
+/* HTMX Loading Indicator Mechanics */
+.htmx-indicator {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  display: inline-block;
+  opacity: 1;
+}
+
+/* Spinner Animation CSS */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 1s ease-in-out infinite;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Delete Button Specific Styles */
+.btn-danger {
+  background: #3f1d24;
+  color: #f43f5e;
+  border: 1px solid #742a3a;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.btn-danger:hover {
+  background: var(--danger);
+  color: white;
+}
+
+/* Network Connection Lost Banner Styling */
+#offline-notification {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #7f1d1d;
+  color: #fca5a5;
+  border: 1px solid #b91c1c;
+  padding: 14px 28px;
+  border-radius: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#offline-notification.show {
+  bottom: 30px; /* Slides smoothly into viewport view above base boundary */
+}
+
+.retry-indicator {
+  width: 8px;
+  height: 8px;
+  background: var(--danger);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.6;
   }
 }

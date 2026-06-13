@@ -48,7 +48,7 @@
 
                     <% if (event.userId.tier === 'premium' && event.allowBooking) { %>
                         <div id="booking-container" style="max-width: 400px; margin: 40px auto; background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; color: #fff; text-align: left;">
-                            <h3 style="margin-top:0; text-align:center;">Book Your Spot Instantly</h3>
+                            <h3 style="margin-top:0; text-align:center;">Reserve Your Spot</h3>
                             <form hx-post="/events/<%= event.slug %>/book" hx-target="#booking-container">
                                 <input type="text" name="name" placeholder="Your Name" style="margin-bottom:10px;" required>
                                 <input type="email" name="email" placeholder="Your Email Address" style="margin-bottom:10px;" required>

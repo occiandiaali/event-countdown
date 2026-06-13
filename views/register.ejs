@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Register - Countdown Mirror</title>
+    <title>Register - CountdownToEvent</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
   </head>
   <body>
     <div class="container" style="max-width: 400px; margin-top: 100px">
       <h2>Get Started</h2>
-      <form hx-post="/auth/register" hx-target="#error-out">
+      <form
+        hx-post="/auth/register"
+        hx-target="#error-out"
+        hx-indicator="#register-spinner"
+      >
         <input type="email" name="email" placeholder="Email Address" required />
         <input
           type="password"
@@ -21,7 +25,20 @@
           <option value="basic">Basic (Free Link Generation)</option>
           <option value="premium">Premium (Custom UI Styles + Iframes)</option>
         </select>
-        <button type="submit">Complete Sign Up</button>
+        <!-- <button type="submit">Complete Sign Up</button> -->
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+          "
+        >
+          <button type="submit">Complete Sign Up</button>
+          <div id="register-spinner" class="htmx-indicator">
+            <div class="spinner"></div>
+          </div>
+        </div>
       </form>
       <div id="error-out" style="margin-top: 10px"></div>
       <p style="text-align: center; font-size: 0.9rem">

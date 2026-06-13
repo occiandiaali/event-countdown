@@ -1,5 +1,5 @@
 <h2 class="setup-h2">Set Up Your Countdown Timer</h2>
-<form hx-post="/events/create" hx-target="#result-target">
+<form hx-post="/events/create" hx-target="#result-target" hx-indicator="#create-spinner">
     <div>
         <label>Event Title</label>
         <input type="text" name="title" placeholder="e.g. Product Launch Alpha" required>
@@ -29,33 +29,87 @@
     </div>
 
     <% if (user.tier === 'premium') { %>
-        <div style="border: 1px dashed var(--accent); padding: 15px; border-radius: 6px; display: flex; flex-direction: column; gap: 15px;">
-            <h4 style="margin: 0; color: var(--accent);">✨ Premium Configurations</h4>
-            
-            <div>
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                    <input type="checkbox" name="allowBooking" value="true" style="width: auto;">
-                    <strong>Enable "Book your spot" registration form on event page</strong>
-                </label>
-            </div>
+    <div style="border: 1px dashed var(--accent); padding: 20px; border-radius: 6px; display: flex; flex-direction: column; gap: 15px;">
+        <h4 style="margin: 0; color: var(--accent);">✨ Premium Configurations</h4>
+        
+        <div>
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                <input type="checkbox" name="allowBooking" value="true" style="width: auto;">
+                <strong>Enable "Book your spot" registration form on event page</strong>
+            </label>
+        </div>
 
-            <div>
-                <label>Custom Background Image URL (Optional)</label>
-                <input type="url" name="customBgImage" placeholder="https://example.com/background.jpg">
-            </div>
+        <div>
+            <label>Custom Background Image URL (Optional)</label>
+            <input type="url" id="preview-img-input" name="customBgImage" placeholder="https://images.unsplash.com/photo-1518770660439-4636190af475">
+        </div>
 
-            <div style="display: flex; gap: 20px;">
-                <label>Canvas Fallback BG Color: <input type="color" name="customBg" value="#121214" style="height:40px; width:60px; padding:0;"></label>
-                <label>Typography Color: <input type="color" name="customText" value="#ffffff" style="height:40px; width:60px; padding:0;"></label>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 150px;">
+                <label>Canvas Fallback BG:</label> 
+                <input type="color" id="preview-bg-input" name="customBg" value="#121214" style="height:40px; padding:0; cursor:pointer;">
+            </div>
+            <div style="flex: 1; min-width: 150px;">
+                <label>Typography Color:</label> 
+                <input type="color" id="preview-text-input" name="customText" value="#ffffff" style="height:40px; padding:0; cursor:pointer;">
             </div>
         </div>
+
+        <div style="margin-top: 10px;">
+            <label style="display:block; margin-bottom:5px; color:var(--text-muted); font-size:0.85rem;">Live Theme & Image Contrast Preview:</label>
+            <div id="theme-thumbnail-preview" style="background-color: #121214; background-position: center; background-size: cover; background-repeat: no-repeat; color: #ffffff; border: 1px solid #3f3f46; border-radius: 6px; padding: 30px; text-align: center; transition: all 0.2s ease;">
+                <div style="background: rgba(0,0,0,0.5); display: inline-block; padding: 15px; border-radius: 6px;">
+                    <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; margin-bottom: 5px;">Sample Event Header</div>
+                    <div style="font-size: 1.5rem; font-weight: bold; font-family: monospace;">02d : 14h : 45m : 12s</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const bgInput = document.getElementById('preview-bg-input');
+            const textInput = document.getElementById('preview-text-input');
+            const imgInput = document.getElementById('preview-img-input');
+            const previewCard = document.getElementById('theme-thumbnail-preview');
+
+            if (bgInput && textInput && imgInput && previewCard) {
+                const updatePreview = () => {
+                    previewCard.style.color = textInput.value;
+                    
+                    if (imgInput.value.trim() !== "") {
+                        // If a background URL is provided, apply it as an inline CSS variable string
+                        previewCard.style.backgroundImage = `url('${imgInput.value.trim()}')`;
+                    } else {
+                        // Roll back to the flat fallback background color if input is wiped clean
+                        previewCard.style.backgroundImage = 'none';
+                        previewCard.style.backgroundColor = bgInput.value;
+                    }
+                };
+
+                bgInput.addEventListener('input', updatePreview);
+                textInput.addEventListener('input', updatePreview);
+                imgInput.addEventListener('input', updatePreview);
+                imgInput.addEventListener('blur', updatePreview); // Re-verifies choice when user clicks away
+                
+                updatePreview();
+            }
+        })();
+    </script>
     <% } else { %>
         <div style="background: #27272a; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
-            💡 <strong>Want features like custom background images and visitor booking forms?</strong> Sign up for a Premium Account status.
+   
+             💡 <strong>Want features like local background uploads, live thumbnail previews, and visitor booking forms?</strong> Sign up for a Premium Account status.
         </div>
     <% } %>
 
-    <button type="submit">Build Workspace Link</button>
+    <!-- <button type="submit">Build Workspace Link</button> -->
+     <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+        <button type="submit">Build Workspace Link</button>
+        <div id="create-spinner" class="htmx-indicator">
+            <div class="spinner"></div> <span style="font-size:0.9rem; color:var(--text-muted)">Generating timer...</span>
+        </div>
+    </div>
 </form>
 
 <div id="result-target"></div>

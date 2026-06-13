@@ -2,29 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Events - Countdown Mirror</title>
+    <title>My Events - CountdownToEvent</title>
     <link rel="stylesheet" href="/css/styles.css">
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 <body>
     <nav><%- include('partials/navbar', { user: user }) %></nav>
 
-    <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div class="container" id="dashboard-container">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; width: 100%;">
             <h2>Your Dashboard Events</h2>
-            <a href="/" class="cta-btn" style="text-decoration: none; padding: 8px 16px; font-size: 0.9rem;">+ Create New</a>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <% if (events.length > 0) { %>
+                    <button class="btn-danger" 
+                            hx-delete="/events/clear-all" 
+                            hx-target="#dashboard-container" 
+                            hx-swap="outerHTML"
+                            hx-confirm="Are you completely sure you want to purge all active countdown timers?"
+                            hx-indicator="#global-purge-spinner">
+                        Clear All Events
+                    </button>
+                <% } %>
+                <a href="/" class="cta-btn" style="text-decoration: none; padding: 8px 16px; font-size: 0.9rem;">+ Create New</a>
+            </div>
+        </div>
+
+        <div id="global-purge-spinner" class="htmx-indicator" style="margin-bottom: 15px; width: 100%; text-align: center;">
+            <div class="spinner"></div> <span style="color: var(--text-muted); font-size: 0.9rem; margin-left: 5px;">Clearing database records...</span>
         </div>
 
         <% if (events.length === 0) { %>
-            <div style="background: var(--bg-surface); padding: 40px; text-align: center; border-radius: 8px;">
+            <div style="background: var(--bg-surface); padding: 40px; text-align: center; border-radius: 8px; width: 100%;">
                 <p style="color: #a1a1aa;">You haven't built any countdown instances yet.</p>
                 <a href="/" style="color: var(--accent);">Create your first countdown timer &rarr;</a>
             </div>
         <% } else { %>
-            <div style="display: flex; flex-direction: column; gap: 15px;">
-                <% events.forEach((event, idx) => { %>
-                    <div style="background: var(--bg-surface); padding: 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;position: relative;">
-                        <span class="list-item-x" id="item-<%= event.title %>">X</span>
+            <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+                <% events.forEach(event => { %>
+                    <div class="event-card">
                         <div>
                             <h3 style="margin: 0 0 5px 0;"><%= event.title %></h3>
                             <p style="margin: 0; font-size: 0.85rem; color: #a1a1aa;">
@@ -32,33 +48,43 @@
                                 | Bookings: <%= event.allowBooking ? `Enabled (${event.attendees.length} RSVPs)` : 'Disabled' %>
                             </p>
                         </div>
-                        <a href="/e/<%= event.slug %>" target="_blank" class="cta-btn" style="background:#27272a; text-decoration:none; font-size:0.85rem; padding: 6px 12px;">View Clock</a>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <a href="/e/<%= event.slug %>" target="_blank" class="cta-btn" style="background:#27272a; text-decoration:none; font-size:0.85rem; padding: 6px 12px;">View Clock</a>
+                            <button class="btn-danger"
+                                    hx-delete="/events/<%= event._id %>"
+                                    hx-target="closest .event-card"
+                                    hx-swap="outerHTML"
+                                    hx-confirm="Delete this individual countdown timer?">
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 <% }) %>
             </div>
         <% } %>
     </div>
-    <script>
-        // const itemX = document.getElementById('list-item-x');
-        // itemX.addEventListener('click', () => {
-        //     events.forEach(el => {
-        //         alert(`Clicked..${el}`)
-                
-        //     });
-        // })
-        document.querySelectorAll('.list-item-x').forEach((span, title) => {
-            span.addEventListener('click', function() {
-               // const itemId = idx;// Capture the current index
-                if (confirm(`Are you sure you want to delete: ${title}?`)) {
-                    alert(`Deleting Item: ${title}`)
-                }
-            })
-        })
-        // function delItem(v) {
-        //     if (confirm(`Are you sure you want to delete: ${JSON.stringify(v)}?`)) {
-        //         alert(`${JSON.stringify(v)} deleted!`)
-        //     }
-        // }
-    </script>
+
+        <div>
+        <%- include('partials/footer') %>
+    </div>
+
+    <div id="offline-notification">
+    <span class="retry-indicator"></span> 
+    📡 Connection Lost. Please check your internet connection and try again.
+</div>
+
+<script>
+    document.body.addEventListener('htmx:sendError', function(event) {
+        const offlineToast = document.getElementById('offline-notification');
+        if (offlineToast) {
+            offlineToast.classList.add('show');
+            
+            // Automatically clear the banner after 5 seconds
+            setTimeout(() => {
+                offlineToast.classList.remove('show');
+            }, 5000);
+        }
+    });
+</script>
 </body>
 </html>

@@ -100,4 +100,43 @@ router.post("/:slug/book", async (req, res) => {
   }
 });
 
+// DELETE /events/clear-all - Delete all events
+router.delete("/clear-all", requireAuth, async (req, res) => {
+  try {
+    await Event.deleteMany({ userId: req.user.id });
+
+    // Returning the container explicitly as the outer shell wrapper
+    res.send(`
+      <div class="container" id="dashboard-container">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; width: 100%;">
+              <h2>Your Dashboard Events</h2>
+              <a href="/" class="cta-btn" style="text-decoration: none; padding: 8px 16px; font-size: 0.9rem;">+ Create New</a>
+          </div>
+          <div style="background: var(--bg-surface); padding: 40px; text-align: center; border-radius: 8px; width: 100%;">
+              <p style="color: #a1a1aa;">All instances dropped successfully.</p>
+              <a href="/" style="color: var(--accent);">Create your first countdown timer &rarr;</a>
+          </div>
+      </div>
+    `);
+  } catch (err) {
+    res.status(500).send("Error clearing events data records.");
+  }
+});
+
+// DELETE /events/:id - Delete an individual event
+router.delete("/:id", requireAuth, async (req, res) => {
+  try {
+    const event = await Event.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user.id,
+    });
+    if (!event) return res.status(404).send("Event not found");
+
+    // Returning an empty response string tells HTMX to remove the target element from the DOM
+    res.send("");
+  } catch (err) {
+    res.status(500).send("Error deleting event.");
+  }
+});
+
 module.exports = router;
