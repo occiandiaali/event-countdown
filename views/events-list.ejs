@@ -40,9 +40,9 @@
                 <a href="/" style="color: var(--accent);">Create your first countdown timer &rarr;</a>
             </div>
         <% } else { %>
-            <!-- <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+            <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
                 <% events.forEach(event => { %>
-                    <div class="event-card">
+                    <!-- <div class="event-card">
                         <div>
                             <h3 style="margin: 0 0 5px 0;"><%= event.title %></h3>
                             <p style="margin: 0; font-size: 0.85rem; color: #a1a1aa;">
@@ -60,10 +60,8 @@
                                 Delete
                             </button>
                         </div>
-                    </div>
-                <% }) %>
-            </div> -->
-            <div class="event-card" style="flex-direction: column; align-items: stretch; gap: 10px;">
+                    </div> -->
+                    <div class="event-card" style="flex-direction: column; align-items: stretch; gap: 10px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
             <div>
                 <h3 style="margin: 0 0 5px 0;"><%= event.title %></h3>
@@ -110,6 +108,8 @@
             </div>
         <% } %>
     </div>
+                <% }) %>
+            </div>
         <% } %>
     </div>
 
