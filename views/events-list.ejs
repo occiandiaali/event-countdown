@@ -95,7 +95,7 @@
             <% 
                 // Dynamically construct the live app domain url on the fly safely inside EJS variables
                 const protocol = (typeof req !== 'undefined' && req.protocol) || 'https';
-                const host = (typeof req !== 'undefined' && req.get) ? req.get('host') : 'countdownmirror.onrender.com';
+                const host = (typeof req !== 'undefined' && req.get) ? req.get('host') : 'countdowntoevent.onrender.com';
                 const fullUrl = `${protocol}://${host}/e/${event.slug}`;
                 const embedCode = `<iframe src="${fullUrl}" width="100%" height="300" style="border:none; border-radius:8px;" allow="payment"></iframe>`;
             %>
