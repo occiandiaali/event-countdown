@@ -64,7 +64,7 @@
         </div>
     </div>
 
-    <script>
+    <!-- <script>
         (function() {
             const engine = document.getElementById('countdown-engine');
             if (!engine) return;
@@ -127,6 +127,79 @@
             runEngine();
             const tickerLoop = setInterval(runEngine, 1000);
         })();
-    </script>
+    </script> -->
+    <script>
+    (function() {
+        const engine = document.getElementById('countdown-engine');
+        if (!engine) return;
+
+        const startTime = new Date(engine.dataset.start).getTime();
+        const endTime = new Date(engine.dataset.end).getTime();
+
+        const runEngine = () => {
+            // CRITICAL FIX: This evaluates using the user's local device clock, bypassing Render's UTC server skew
+            const now = new Date().getTime();
+
+            // 1. If we are genuinely before the start window, keep showing the scheduled container
+            if (now < startTime) {
+                return;
+            }
+
+            // 2. Client-Side Override: If the device time says the event has started, 
+            // but the server rendered the static 'scheduled' layout, swap it out for the live clock elements.
+            const scheduledBox = document.getElementById('scheduled-status');
+            if (scheduledBox || !document.getElementById('timer')) {
+                engine.innerHTML = `
+                    <div id="timer" style="font-size: 3rem; font-weight: bold; margin: 30px 0; letter-spacing: 2px;">
+                        <span id="days">00</span>d : <span id="hours">00</span>h : <span id="mins">00</span>m : <span id="secs">00</span>s
+                    </div>
+                    <% if (event.userId.tier === 'premium' && event.allowBooking) { %>
+                        <div id="booking-container" style="max-width: 400px; margin: 40px auto; background: rgba(0,0,0,0.7); border:1px solid rgba(255,255,255,0.1); padding: 20px; border-radius: 8px; color:#fff; text-align:left;">
+                            <h3 style="margin-top:0; text-align:center;">Book Your Spot Instantly</h3>
+                            <form hx-post="/events/<%= event.slug %>/book" hx-target="#booking-container">
+                                <input type="text" name="name" placeholder="Your Name" style="margin-bottom:10px;" required>
+                                <input type="email" name="email" placeholder="Your Email Address" style="margin-bottom:10px;" required>
+                                <button type="submit" class="cta-btn" style="width:100%;">Confirm Attendance Registration</button>
+                            </form>
+                        </div>
+                    <% } %>
+                `;
+                if (typeof htmx !== 'undefined') { htmx.process(engine); }
+            }
+
+            // 3. Handle Expiration
+            const difference = endTime - now;
+            if (difference <= 0) {
+                clearInterval(tickerLoop);
+                engine.innerHTML = `
+                    <div class="expired-box" style="background: rgba(244, 63, 94, 0.2); border: 2px solid #f43f5e; padding: 20px; display: inline-block; margin-top: 25px; border-radius: 6px;">
+                        🛑 This countdown event has reached completion and is concluded.
+                    </div>
+                `;
+                return;
+            }
+
+            // 4. Update the Active DOM Ticker Elements
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            const dEl = document.getElementById('days');
+            const hEl = document.getElementById('hours');
+            const mEl = document.getElementById('mins');
+            const sEl = document.getElementById('secs');
+
+            if (dEl) dEl.innerText = String(d).padStart(2, '0');
+            if (hEl) hEl.innerText = String(h).padStart(2, '0');
+            if (mEl) mEl.innerText = String(m).padStart(2, '0');
+            if (sEl) sEl.innerText = String(s).padStart(2, '0');
+        };
+
+        // Fire immediately to overwrite any server/client timezone sync gap instantly
+        runEngine();
+        const tickerLoop = setInterval(runEngine, 1000);
+    })();
+</script>
 </body>
 </html>
