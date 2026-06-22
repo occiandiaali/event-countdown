@@ -99,6 +99,9 @@ footer {
   left: 0;
   padding: 8px;
 }
+footer a {
+  color: orange;
+}
 
 /* Fluid Landing Presentation Styles */
 .hero-section {
