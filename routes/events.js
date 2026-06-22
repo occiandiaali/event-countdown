@@ -28,6 +28,7 @@ router.post("/create", requireAuth, async (req, res) => {
       customText,
       customBgImage,
       allowBooking,
+      clientOffset, // Grab the hidden offset minutes from the body
     } = req.body;
     const slug =
       title.toLowerCase().replace(/[^a-z0-9]+/g, "-") +
@@ -37,6 +38,31 @@ router.post("/create", requireAuth, async (req, res) => {
     // Only allow booking selection and image styling if user tier is premium
     const isPremium = req.user.tier === "premium";
     const bookingEnabled = isPremium && allowBooking === "true";
+
+    // Helper function to convert dynamic browser strings into exact absolute UTC dates
+    const parseClientDate = (dateString, offsetMinutes) => {
+      if (!dateString) return null;
+      const localDate = new Date(dateString); // Server parses as local/UTC incorrectly first
+      if (isNaN(localDate.getTime())) return null;
+
+      // If clientOffset exists, subtract it (in ms) to find true absolute UTC time
+      if (offsetMinutes !== undefined) {
+        const offsetMs = parseInt(offsetMinutes, 10) * 60 * 1000;
+        return new Date(localDate.getTime() + offsetMs);
+      }
+      return localDate;
+    };
+
+    const targetStart = parseClientDate(startAt, clientOffset);
+    const targetEnd = parseClientDate(endAt, clientOffset);
+
+    if (!targetStart || !targetEnd) {
+      return res
+        .status(400)
+        .send(
+          '<p style="color:red">Invalid date configuration entries provided.</p>',
+        );
+    }
 
     const themeConfig = {
       type: isPremium && (customBg || customBgImage) ? "custom" : "preset",
@@ -50,8 +76,8 @@ router.post("/create", requireAuth, async (req, res) => {
       userId: req.user.id,
       title,
       details,
-      startAt: new Date(startAt),
-      endAt: new Date(endAt),
+      startAt: targetStart, //new Date(startAt),
+      endAt: targetEnd, //new Date(endAt),
       slug,
       allowBooking: bookingEnabled,
       theme: themeConfig,
@@ -62,7 +88,7 @@ router.post("/create", requireAuth, async (req, res) => {
 
     res.send(`
       <div class="success-box">
-          <p>🎉 <strong>Event Configured!</strong></p>
+          <p>🎉 <strong>Event Configured Natively in Your Timezone!</strong></p>
           <p><strong>Public URL:</strong> <a href="${fullUrl}" target="_blank">${fullUrl}</a></p>
           ${
             isPremium

@@ -1,5 +1,9 @@
 <h2 class="setup-h2">Set Up Your Countdown Timer</h2>
-<form hx-post="/events/create" hx-target="#result-target" hx-indicator="#create-spinner">
+<form hx-post="/events/create" hx-target="#result-target" hx-indicator="#create-spinner" id="event-creation-form">
+
+    <input type="hidden" id="client-timezone" name="clientTimezone">
+    <input type="hidden" id="client-offset" name="clientOffset">
+
     <div>
         <label>Event Title</label>
         <input type="text" name="title" placeholder="e.g. Product Launch Alpha" required>
@@ -10,11 +14,11 @@
     </div>
     <div style="display: flex; gap: 10px;" id="dates-windows-div">
         <div style="flex: 1;">
-            <label>Start Window</label>
+            <label>Start Window(Local Time)</label>
             <input type="datetime-local" name="startAt" required>
         </div>
         <div style="flex: 1;">
-            <label>End/Target Window</label>
+            <label>End/Target Window(Local Time)</label>
             <input type="datetime-local" name="endAt" required>
         </div>
     </div>
@@ -66,6 +70,24 @@
         </div>
     </div>
 
+    <% } else { %>
+        <div style="background: #27272a; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
+   
+             💡 <strong>Want features like local background uploads, live thumbnail previews, and visitor booking forms?</strong> Sign up for a Premium Account status.
+        </div>
+    <% } %>
+
+    <!-- <button type="submit">Build Workspace Link</button> -->
+     <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+        <button type="submit">Build Workspace Link</button>
+        <div id="create-spinner" class="htmx-indicator">
+            <div class="spinner"></div> <span style="font-size:0.9rem; color:var(--text-muted)">Generating timer...</span>
+        </div>
+    </div>
+</form>
+
+<div id="result-target"></div>
+
     <script>
         (function() {
             const bgInput = document.getElementById('preview-bg-input');
@@ -94,22 +116,15 @@
                 
                 updatePreview();
             }
+
+            const form = document.getElementById('event-creation-form');
+        if (form) {
+            // Intercept form values right before submission execution
+            form.addEventListener('submit', function() {
+                document.getElementById('client-timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                // .getTimezoneOffset() returns minutes (e.g., UTC+1 returns -60, UTC-5 returns 300)
+                document.getElementById('client-offset').value = new Date().getTimezoneOffset();
+            });
+        }
         })();
     </script>
-    <% } else { %>
-        <div style="background: #27272a; padding: 12px; border-radius: 6px; font-size: 0.9rem;">
-   
-             💡 <strong>Want features like local background uploads, live thumbnail previews, and visitor booking forms?</strong> Sign up for a Premium Account status.
-        </div>
-    <% } %>
-
-    <!-- <button type="submit">Build Workspace Link</button> -->
-     <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
-        <button type="submit">Build Workspace Link</button>
-        <div id="create-spinner" class="htmx-indicator">
-            <div class="spinner"></div> <span style="font-size:0.9rem; color:var(--text-muted)">Generating timer...</span>
-        </div>
-    </div>
-</form>
-
-<div id="result-target"></div>

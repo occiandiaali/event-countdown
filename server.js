@@ -41,19 +41,23 @@ app.get("/e/:slug", async (req, res) => {
     const event = await Event.findOne({ slug: req.params.slug }).populate(
       "userId",
     );
-    if (!event)
-      return res.status(404).send("The event link provided does not exist.");
+    if (!event) return res.status(404).send("Countdown not found.");
 
-    const now = new Date();
-    let state = "active";
+    // const now = new Date();
+    // let state = "active";
 
-    if (now < event.startAt) {
-      state = "scheduled";
-    } else if (now > event.endAt) {
-      state = "expired";
-    }
+    // if (now < event.startAt) {
+    //   state = "scheduled";
+    // } else if (now > event.endAt) {
+    //   state = "expired";
+    // }
 
-    res.render("countdown", { event, state, user: req.user });
+    // res.render("countdown", { event, state, user: req.user });
+    res.render("countdown", {
+      event,
+      startEpoch: event.startAt.getTime(), // Standardized numeric Epoch ms
+      endEpoch: event.endAt.getTime(),
+    });
   } catch (err) {
     res.status(500).send("Error rendering countdown space.");
   }
