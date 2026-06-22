@@ -40,7 +40,7 @@
                 <a href="/" style="color: var(--accent);">Create your first countdown timer &rarr;</a>
             </div>
         <% } else { %>
-            <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+            <!-- <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
                 <% events.forEach(event => { %>
                     <div class="event-card">
                         <div>
@@ -62,7 +62,54 @@
                         </div>
                     </div>
                 <% }) %>
+            </div> -->
+            <div class="event-card" style="flex-direction: column; align-items: stretch; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <h3 style="margin: 0 0 5px 0;"><%= event.title %></h3>
+                <p style="margin: 0; font-size: 0.85rem; color: #a1a1aa;">
+                    Target Date: <%= event.endAt.toLocaleString() %> 
+                    | Bookings: <%= event.allowBooking ? `Enabled (${event.attendees.length} RSVPs)` : 'Disabled' %>
+                </p>
             </div>
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <a href="/e/<%= event.slug %>" target="_blank" class="cta-btn" style="background:#27272a; text-decoration:none; font-size:0.85rem; padding: 6px 12px;">View Clock</a>
+                
+                <% if (user.tier === 'premium') { %>
+                    <button class="cta-btn" 
+                            style="background: var(--accent); font-size:0.85rem; padding: 6px 12px;" 
+                            onclick="document.getElementById('embed-drawer-<%= event._id %>').classList.toggle('show-drawer')">
+                        🔗 Embed Code
+                    </button>
+                <% } %>
+
+                <button class="btn-danger"
+                        hx-delete="/events/<%= event._id %>"
+                        hx-target="closest .event-card"
+                        hx-swap="outerHTML"
+                        hx-confirm="Delete this individual countdown timer?">
+                    Delete
+                </button>
+            </div>
+        </div>
+
+        <% if (user.tier === 'premium') { %>
+            <% 
+                // Dynamically construct the live app domain url on the fly safely inside EJS variables
+                const protocol = (typeof req !== 'undefined' && req.protocol) || 'https';
+                const host = (typeof req !== 'undefined' && req.get) ? req.get('host') : 'countdownmirror.onrender.com';
+                const fullUrl = `${protocol}://${host}/e/${event.slug}`;
+                const embedCode = `<iframe src="${fullUrl}" width="100%" height="300" style="border:none; border-radius:8px;" allow="payment"></iframe>`;
+            %>
+            <div id="embed-drawer-<%= event._id %>" class="embed-drawer">
+                <label style="font-size: 0.8rem; font-weight: bold; color: var(--accent); display: block; margin-bottom: 5px;">
+                    📋 Copy Iframe Embed Snippet:
+                </label>
+                <textarea readonly onclick="this.select(); document.execCommand('copy'); alert('Copied code snippet to clipboard!');" 
+                          style="width:100%; height:55px; font-family:monospace; font-size:0.8rem; background:#09090b; color:#39ff14; border:1px solid #27272a; padding:8px; border-radius:4px; cursor:pointer; resize:none;"><%= embedCode %></textarea>
+            </div>
+        <% } %>
+    </div>
         <% } %>
     </div>
 
