@@ -6,6 +6,7 @@
   --accent: #6366f1;
   --danger: #f43f5e;
   --success: #14532d;
+  --linkage: #f5deb3;
 }
 
 /* Global Reset & Box-Sizing Fix */
@@ -64,7 +65,7 @@ nav button {
 }
 
 nav a:hover {
-  color: var(--accent);
+  color: var(--linkage);
 }
 
 nav button {
@@ -197,6 +198,9 @@ button[type="submit"],
     transform 0.1s ease;
   text-align: center;
   display: inline-block;
+}
+.cta-btn:hover {
+  background: var(--text-muted);
 }
 
 button[type="submit"]:active,

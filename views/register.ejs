@@ -4,12 +4,13 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="../images/hourglass.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register - CountdownToEvent</title>
+    <title>Register - CountDownEvent</title>
     <link rel="stylesheet" href="/css/styles.css" />
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
   </head>
   <body>
     <div class="container" style="max-width: 400px; margin-top: 100px">
+      <a style="color: wheat; font-weight: 600" href="/">Exit</a>
       <h2>Get Started</h2>
       <form
         hx-post="/auth/register"
@@ -37,7 +38,7 @@
             margin-top: 10px;
           "
         >
-          <button type="submit">Complete Sign Up</button>
+          <button type="submit" class="cta-btn">Complete Sign Up</button>
           <div id="register-spinner" class="htmx-indicator">
             <div class="spinner"></div>
           </div>
@@ -45,8 +46,11 @@
       </form>
       <div id="error-out" style="margin-top: 10px"></div>
       <p style="text-align: center; font-size: 0.9rem">
-        <a href="/login" style="color: var(--accent)"
+        <!-- <a href="/login" style="color: var(--accent)"
           >Already profile active? Log In</a
+        > -->
+        <a href="/login" style="color: var(--linkage)"
+          >Already registered? Log In</a
         >
       </p>
     </div>

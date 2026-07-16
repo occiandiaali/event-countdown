@@ -43,16 +43,6 @@ app.get("/e/:slug", async (req, res) => {
     );
     if (!event) return res.status(404).send("Countdown not found.");
 
-    // const now = new Date();
-    // let state = "active";
-
-    // if (now < event.startAt) {
-    //   state = "scheduled";
-    // } else if (now > event.endAt) {
-    //   state = "expired";
-    // }
-
-    // res.render("countdown", { event, state, user: req.user });
     res.render("countdown", {
       event,
       startEpoch: event.startAt.getTime(), // Standardized numeric Epoch ms

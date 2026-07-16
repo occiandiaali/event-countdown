@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
         <link rel="icon" type="image/svg+xml" href="../images/hourglass.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CountdownToEvent</title>
+    <title>CountDownEvent</title>
     <link rel="stylesheet" href="/css/styles.css">
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
@@ -16,7 +16,7 @@
             <div style="text-align: center; margin-top: 60px;">
                 <h1 style="font-size: 3.5rem; margin-bottom: 10px;" class="main-h1">Timers Built For Global Distribution.</h1>
                 <p style="color: #a1a1aa; font-size: 1.2rem; margin-bottom: 30px;">Generate custom countdown timers with standard links or embeddable iframes seamlessly.</p>
-                <a href="/register" class="cta-btn" style="text-decoration: none; padding: 15px 30px;">Start Creating Events</a>
+                <a href="/register" class="cta-btn" style="text-decoration: none; padding: 15px 30px;">Start Creating</a>
             </div>
         <% } else { %>
             <%- include('partials/create-event', { user: user }) %>
