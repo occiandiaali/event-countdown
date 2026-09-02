@@ -292,6 +292,58 @@ button[type="submit"]:active,
   border: 1px solid #ccc;
 }
 
+/* Delete Button Specific Styles */
+.btn-danger {
+  background: #3f1d24;
+  color: #f43f5e;
+  border: 1px solid #742a3a;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.btn-danger:hover {
+  background: var(--danger);
+  color: white;
+}
+
+/* Network Connection Lost Banner Styling */
+#offline-notification {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #7f1d1d;
+  color: #fca5a5;
+  border: 1px solid #b91c1c;
+  padding: 14px 28px;
+  border-radius: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  font-weight: bold;
+  /* display: flex; */
+  display: none;
+  align-items: center;
+  gap: 10px;
+  transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#offline-notification.show {
+  bottom: 30px; /* Slides smoothly into viewport view above base boundary */
+}
+
+/* HTMX Loading Indicator Mechanics */
+.htmx-indicator {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  display: inline-block;
+  opacity: 1;
+}
+
 @media (max-width: 680px) {
   .container {
     margin: 30% auto;
@@ -325,18 +377,6 @@ button[type="submit"]:active,
   }
 }
 
-/* HTMX Loading Indicator Mechanics */
-.htmx-indicator {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-}
-.htmx-request .htmx-indicator,
-.htmx-request.htmx-indicator {
-  display: inline-block;
-  opacity: 1;
-}
-
 /* Spinner Animation CSS */
 .spinner {
   display: inline-block;
@@ -354,45 +394,6 @@ button[type="submit"]:active,
   to {
     transform: rotate(360deg);
   }
-}
-
-/* Delete Button Specific Styles */
-.btn-danger {
-  background: #3f1d24;
-  color: #f43f5e;
-  border: 1px solid #742a3a;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-.btn-danger:hover {
-  background: var(--danger);
-  color: white;
-}
-
-/* Network Connection Lost Banner Styling */
-#offline-notification {
-  position: fixed;
-  bottom: -100px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #7f1d1d;
-  color: #fca5a5;
-  border: 1px solid #b91c1c;
-  padding: 14px 28px;
-  border-radius: 30px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-  z-index: 9999;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#offline-notification.show {
-  bottom: 30px; /* Slides smoothly into viewport view above base boundary */
 }
 
 .retry-indicator {
